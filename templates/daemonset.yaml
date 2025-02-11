@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: IfNotPresent
         securityContext:
           privileged: {{ .Values.container.securityContext.privileged }}
-          readOnlyRootFilesystem: {{ .Values.container.securityContext.readOnlyRootFileSystem }}
+          readOnlyRootFilesystem: {{ .Values.container.securityContext.readOnlyRootFilesystem }}
         volumeMounts:
         - mountPath: /etc/telegraf
           name: telegraf-thermal-mon-config
