@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: telegraf-thermal
+  namespace: {{ .Values.namespace }}
+spec:
+  revisionHistoryLimit: {{ .Values.daemonset.revisionHistoryLimit }}
+  selector:
+    matchLabels:
+      application: telegraf-thermal
+  template:
+    metadata:
+      labels:
+        application: telegraf-thermal
+    spec:
+      shareProcessNamespace: true
+      containers:
+      - name: telegraf-checker
+        command: ["/usr/bin/telegraf"]
+        args:
+        - "--config"
+        - "/etc/telegraf/telegraf.conf"
+        - "--config-directory"
+        - "/etc/telegraf/telegraf.d"
+        image: "{{ .Values.container.image.repository }}:{{ .Values.container.image.tag }}"
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: {{ .Values.container.securityContext.privileged }}
+          readOnlyRootFilesystem: {{ .Values.container.securityContext.readOnlyRootFileSystem }}
+        volumeMounts:
+        - mountPath: /etc/telegraf
+          name: telegraf-thermal-mon-config
+        - mountPath: /tmp/collect_thermal_metrics.sh
+          name: telegraf-thermal-script
+          subPath: collect_thermal_metrics.sh
+        - mountPath: /lib
+          name: lib
+        - mountPath: /bin/bash
+          name: bin-bash
+        - mountPath: /bin/sh
+          name: bin-sh
+        - mountPath: /bin/grep
+          name: bin-grep
+        - mountPath: /bin/cut
+          name: bin-cut
+        - mountPath: /bin/tr
+          name: bin-tr
+        - mountPath: /usr/bin/ipmitool
+          name: usr-bin-ipmitool
+      securityContext:
+        runAsUser: {{ .Values.daemonset.securityContext.runAsUser }}
+        runAsGroup: {{ .Values.daemonset.securityContext.runAsGroup }}
+        fsGroup: {{ .Values.daemonset.securityContext.fsGroup }}
+      volumes:
+      - hostPath:
+          path: /lib
+          type: Directory
+        name: lib
+      - hostPath:
+          path: /usr/bin/ipmitool
+          type: File
+        name: usr-bin-ipmitool
+      - hostPath:
+          path: /bin/bash
+          type: File
+        name: bin-bash
+      - hostPath:
+          path: /bin/sh
+          type: File
+        name: bin-sh
+      - hostPath:
+          path: /bin/cut
+          type: File
+        name: bin-cut
+      - hostPath:
+          path: /bin/grep
+          type: File
+        name: bin-grep
+      - hostPath:
+          path: /bin/tr
+          type: File
+        name: bin-tr
+      - name: telegraf-thermal-mon-config
+        configMap:
+          defaultMode: 0420
+          name: telegraf-thermal-mon-config
+      - name: telegraf-thermal-script
+        configMap:
+          defaultMode: 0755
+          name: telegraf-thermal-script

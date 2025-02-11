@@ -1,0 +1,25 @@
+# Namespace configuration
+namespace: custom-thermal-mon
+
+# Telegraf configuration
+telegraf:
+  interval: "160s"
+  collection_jitter: "20s"
+  metric_batch_size: 1000
+  metric_buffer_limit: 10000
+# DaemonSet configuration
+daemonset:
+  revisionHistoryLimit: 10
+  securityContext:
+    runAsUser: 0
+    runAsGroup: 0
+    fsGroup: 0
+# Container configuration
+container:
+  name: telegraf-checker
+  image:
+    repository: mirantis.azurecr.io/stacklight/telegraf
+    tag: 1-20240426131156
+  securityContext:
+    privileged: true
+    readOnlyRootFilesystem: true

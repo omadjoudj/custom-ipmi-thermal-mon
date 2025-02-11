@@ -1,0 +1,6 @@
+name: custom-thermal-mon
+version: 1.0.0
+description: A Helm chart for custom thermal and fan monitoring using IPMI
+maintainers:
+  - name: Othman Madjoudj
+    email: omadjoudj in the directory
