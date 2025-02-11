@@ -1,4 +1,4 @@
-apiVersion: v2
+apiVersion: v1
 name: custom-thermal-mon
 version: 1.0.0
 description: A Helm chart for custom thermal and fan monitoring using IPMI
