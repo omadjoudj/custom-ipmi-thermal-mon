@@ -19,7 +19,7 @@ container:
   name: telegraf-checker
   image:
     repository: mirantis.azurecr.io/stacklight/telegraf
-    tag: 1-20240426131156
+    tag: 1-20241115074302
   securityContext:
     privileged: true
     readOnlyRootFilesystem: true
